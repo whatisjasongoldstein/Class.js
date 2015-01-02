@@ -1,6 +1,10 @@
 /* Simple JavaScript Inheritance
  * By John Resig http://ejohn.org/
  * MIT Licensed.
+ *
+ * Extended by Jason Goldstein to support customer
+ * events and triggers.
+ * 
  */
 // Inspired by base2 and Prototype
 (function(){
@@ -58,6 +62,29 @@
  
     // And make this class extendable
     Class.extend = arguments.callee;
+
+    Class.prototype.addEventListener = function(eventName, callback) {
+      this._eventHandlers = this._eventHandlers || [];
+      this._eventHandlers.push({
+        "name": eventName,
+        "callback": callback
+      });
+    };
+
+    Class.prototype.trigger = function(eventName, data) {
+      this._eventHandlers = this._eventHandlers || [];
+      var handler;
+      for (var i = 0; i < this._eventHandlers.length; i++) {
+        handler = this._eventHandlers[i];
+        if (handler.name === eventName) {
+          handler.callback({
+            "name": eventName,
+            "data": data,
+            "object": this
+          });
+        }
+      };
+    };
    
     return Class;
   };
