@@ -71,6 +71,17 @@
       });
     };
 
+    Class.prototype.on = function(eventNames, callback) {
+      this._eventHandlers = this._eventHandlers || [];
+      eventNames = eventNames.split(" ");
+      for (var i = eventNames.length - 1; i >= 0; i--) {
+        this._eventHandlers.push({
+          "name": eventNames[i],
+          "callback": callback
+        });
+      }
+    };
+
     Class.prototype.trigger = function(eventName, data) {
       this._eventHandlers = this._eventHandlers || [];
       var handler;
